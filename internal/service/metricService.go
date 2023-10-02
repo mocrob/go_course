@@ -3,13 +3,13 @@ package service
 import (
 	"fmt"
 	"github.com/mocrob/go_course.git/internal/entity/metric"
-	"github.com/mocrob/go_course.git/internal/entity/metric/typedMetric"
+	"github.com/mocrob/go_course.git/internal/entity/metric/typedmetric"
 )
 
 type MetricService struct{}
 
 func (s *MetricService) AddGaugeMetric(storage *metric.MemStorage, metricName string, value string) error {
-	gauge, err := typedMetric.NewGauge(metricName, value)
+	gauge, err := typedmetric.NewGauge(metricName, value)
 	if err != nil {
 		return fmt.Errorf("ошибка создания метрики: %w", err)
 	}
@@ -25,7 +25,7 @@ func (s *MetricService) AddGaugeMetric(storage *metric.MemStorage, metricName st
 }
 
 func (s *MetricService) AddCounterMetric(storage *metric.MemStorage, metricName string, value string) error {
-	counter, err := typedMetric.NewCounter(metricName, value)
+	counter, err := typedmetric.NewCounter(metricName, value)
 	if err != nil {
 		return fmt.Errorf("ошибка создания метрики: %w", err)
 	}

@@ -1,4 +1,4 @@
-package typedMetric
+package typedmetric
 
 import "strconv"
 
