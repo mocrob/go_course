@@ -1,3 +1,3 @@
 module github.com/mocrob/go_course.git
 
-go 1.21.0
+go 1.21
