@@ -16,7 +16,7 @@ func MetricUpdateHandler(repo repository.MetricRepo) http.HandlerFunc {
 		metricName := chi.URLParam(r, "name")
 		metricValue := chi.URLParam(r, "value")
 		if metricType == "" || metricName == "" || metricValue == "" {
-			http.Error(w, "Некорректный формат URL", http.StatusNotFound)
+			http.Error(w, "Некорректный URL", http.StatusNotFound)
 			return
 		}
 		var typedMetricValue interface{}
@@ -27,7 +27,7 @@ func MetricUpdateHandler(repo repository.MetricRepo) http.HandlerFunc {
 		case string(entity.Counter):
 			typedMetricValue, err = strconv.ParseInt(metricValue, 10, 64)
 		default:
-			http.Error(w, "Некорректный тип метрики", http.StatusBadRequest)
+			http.Error(w, "Некорректный тип", http.StatusBadRequest)
 			return
 		}
 		if err != nil {

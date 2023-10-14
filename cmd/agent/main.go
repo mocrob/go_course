@@ -7,10 +7,10 @@ import (
 )
 
 func main() {
+	parseFlags()
 	memStorage := storage.NewMemoryStorage()
 	repo := repository.MetricRepo(memStorage)
-
 	stopSymb := make(chan struct{})
-	go agent.MetricAgent(repo, "http://localhost:8080/update", stopSymb)
+	go agent.MetricAgent(repo, "http://"+flagRunAddr+"/update", flagReportInterval, flagPollInterval, stopSymb)
 	select {}
 }

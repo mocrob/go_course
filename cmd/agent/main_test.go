@@ -19,7 +19,7 @@ func TestAgent_MetricAgent(t *testing.T) {
 	defer server.Close()
 
 	stopSymb := make(chan struct{})
-	go agent.MetricAgent(agentStorage, server.URL+"/update", stopSymb)
+	go agent.MetricAgent(agentStorage, server.URL+"/update", 2, 10, stopSymb)
 
 	time.Sleep(1 * time.Second)
 	close(stopSymb)

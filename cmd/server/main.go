@@ -10,13 +10,12 @@ import (
 )
 
 func main() {
+	parseFlags()
 	memoryStorage := storage.NewMemoryStorage()
 	repo := repository.MetricRepo(memoryStorage)
-
 	r := chi.NewRouter()
 	r.Post("/update/{type}/{name}/{value}", handler.MetricUpdateHandler(repo))
 	r.Get("/value/{type}/{name}", handler.MetricGetHandler(repo))
 	r.Get("/", handler.MetricGetAllHandler(repo))
-
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(flagRunAddr, r))
 }
