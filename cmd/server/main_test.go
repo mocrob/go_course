@@ -41,7 +41,7 @@ func TestMetricUpdateHandler(t *testing.T) {
 			want: want{
 				code:     http.StatusNotFound,
 				request:  "/update/gauge/",
-				response: "404 - not found\n",
+				response: "404 page not found\n",
 			},
 		},
 		{
