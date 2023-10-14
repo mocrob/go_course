@@ -38,7 +38,7 @@ func handleUpdate(w http.ResponseWriter, r *http.Request, storage *metric.MemSto
 	value := pathSegments[2]
 
 	if metricName == "" {
-		http.Error(w, "Метрика найдена", http.StatusNotFound)
+		http.Error(w, "Метрика не найдена", http.StatusNotFound)
 		return
 	}
 
