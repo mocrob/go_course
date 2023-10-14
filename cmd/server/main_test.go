@@ -1,12 +1,13 @@
 package main
 
 import (
+	"github.com/go-chi/chi/v5"
+	"github.com/go-resty/resty/v2"
 	"github.com/mocrob/go_course.git/internal/entity"
 	"github.com/mocrob/go_course.git/internal/handler"
 	"github.com/mocrob/go_course.git/internal/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -40,7 +41,7 @@ func TestMetricUpdateHandler(t *testing.T) {
 			want: want{
 				code:     http.StatusNotFound,
 				request:  "/update/gauge/",
-				response: "Некорректный URL\n",
+				response: "404 - not found\n",
 			},
 		},
 		{
@@ -154,20 +155,23 @@ func TestMetricUpdateHandler(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			request := httptest.NewRequest(http.MethodGet, testCase.want.request, nil)
-			w := httptest.NewRecorder()
-			h := handler.MetricUpdateHandler(testCase.storage)
-			h(w, request)
+			r := chi.NewRouter()
+			r.Post("/update/{type}/{name}/{value}", handler.MetricUpdateHandler(testCase.storage))
+			srv := httptest.NewServer(r)
+			defer srv.Close()
 
-			res := w.Result()
+			req := resty.New().R()
+			req.Method = http.MethodPost
+			req.URL = srv.URL + testCase.want.request
 
-			assert.Equal(t, testCase.want.code, res.StatusCode)
+			resp, err := req.Send()
+			assert.NoError(t, err, "error making HTTP request")
 
-			defer res.Body.Close()
-			resBody, err := io.ReadAll(res.Body)
-			require.NoError(t, err)
-			require.Equal(t, testCase.want.response, string(resBody))
+			assert.Equal(t, testCase.want.code, resp.StatusCode())
 
+			if testCase.want.response != "" {
+				require.Equal(t, testCase.want.response, string(resp.Body()))
+			}
 			if testCase.want.expectStorage != nil {
 				require.Equal(t, testCase.want.expectStorage, testCase.storage)
 			}

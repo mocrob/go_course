@@ -2,6 +2,7 @@ package agent
 
 import (
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/mocrob/go_course.git/internal/entity"
 	"github.com/mocrob/go_course.git/internal/repository"
 	"math/rand"
@@ -89,7 +90,10 @@ func sendMetrics(repo repository.MetricRepo, hookPath string) {
 	allMetrics := repo.GetAllMetrics()
 	for _, metric := range allMetrics {
 		url := fmt.Sprintf("%s/%s/%s/%v", hookPath, metric.Type, metric.Name, metric.Value)
-		_, err := http.Post(url, "text/plain", nil)
+		req := resty.New().R()
+		req.Method = http.MethodPost
+		req.URL = url
+		_, err := req.Send()
 		if err != nil {
 			fmt.Println("Failed to send metric:", metric, "Error:", err)
 		}
