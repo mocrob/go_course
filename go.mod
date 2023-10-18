@@ -7,6 +7,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-resty/resty/v2 v2.9.1
 	github.com/stretchr/testify v1.8.4
+	golang.org/x/sync v0.1.0
 )
 
 require (

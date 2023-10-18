@@ -6,6 +6,7 @@ import (
 	"github.com/mocrob/go_course.git/internal/entity"
 	"github.com/mocrob/go_course.git/internal/repository"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -51,10 +52,13 @@ func MetricGetHandler(repo repository.MetricRepo) http.HandlerFunc {
 		metricType := chi.URLParam(r, "type")
 		metricName := chi.URLParam(r, "name")
 
-		resultMetric, ok := repo.GetMetric(metricName)
+		resultMetric, ok, err := repo.GetMetric(metricName)
 		if !ok {
 			http.Error(w, "Не найдено", http.StatusNotFound)
 			return
+		}
+		if err != nil {
+			log.Fatal(err)
 		}
 
 		switch metricType {
@@ -76,7 +80,10 @@ func MetricGetHandler(repo repository.MetricRepo) http.HandlerFunc {
 
 func MetricGetAllHandler(repo repository.MetricRepo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		resultMetrics := repo.GetAllMetrics()
+		resultMetrics, err := repo.GetAllMetrics()
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		for _, metric := range resultMetrics {
 			switch metric.Type {

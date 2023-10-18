@@ -22,36 +22,42 @@ func NewMemoryStoragePlusMetrics(initMetrics map[string]entity.Metric) *MemorySt
 	}
 }
 
-func (m *MemoryStorage) AddMetric(name string, metric entity.Metric) {
+func (m *MemoryStorage) AddMetric(name string, metric entity.Metric) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if existMetric, ok := m.metrics[name]; ok {
-		if existMetric.Type == entity.Counter {
-			existMetric.Value = existMetric.Value.(int64) + metric.Value.(int64)
-		} else {
-			existMetric.Value = metric.Value
-		}
-		m.metrics[name] = existMetric
-	} else {
+
+	existingMetric, ok := m.metrics[name]
+	if !ok {
 		m.metrics[name] = metric
+		return nil
 	}
+
+	if existingMetric.Type == entity.Counter {
+		existingMetric.Value = existingMetric.Value.(int64) + metric.Value.(int64)
+	} else {
+		existingMetric.Value = metric.Value
+	}
+	m.metrics[name] = existingMetric
+
+	return nil
 }
 
-func (m *MemoryStorage) GetMetric(name string) (entity.Metric, bool) {
+func (m *MemoryStorage) GetMetric(name string) (entity.Metric, bool, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	metric, ok := m.metrics[name]
-	return metric, ok
+	return metric, ok, nil
 }
 
-func (m *MemoryStorage) GetAllMetrics() map[string]entity.Metric {
+func (m *MemoryStorage) GetAllMetrics() (map[string]entity.Metric, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	return m.metrics
+	return m.metrics, nil
 }
 
-func (m *MemoryStorage) ClearMetrics() {
+func (m *MemoryStorage) ClearMetrics() error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.metrics = make(map[string]entity.Metric)
+	return nil
 }
