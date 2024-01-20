@@ -67,6 +67,7 @@ func MetricUpdateHandler(repo MetricRepo) http.HandlerFunc {
 
 func MetricGetHandler(repo MetricRepo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
 		metricType := chi.URLParam(r, "type")
 		metricName := chi.URLParam(r, "name")
 
@@ -123,6 +124,7 @@ func MetricPostHandler(repo MetricRepo) http.HandlerFunc {
 }
 func MetricGetAllHandler(repo MetricRepo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
 		resultMetrics, err := repo.GetAllMetrics()
 		if err != nil {
 			log.Fatal(err)
@@ -153,6 +155,7 @@ func WithLogging(h http.HandlerFunc, sugar zap.SugaredLogger) http.HandlerFunc {
 		responseData := &ResponseData{
 			status: 0,
 			size:   0,
+			body:   "",
 		}
 		lw := LoggingResponseWriter{
 			ResponseWriter: w,
@@ -169,6 +172,7 @@ func WithLogging(h http.HandlerFunc, sugar zap.SugaredLogger) http.HandlerFunc {
 			"duration", duration,
 			"status", responseData.status,
 			"size", responseData.size,
+			"body", responseData.body,
 		)
 	}
 }
