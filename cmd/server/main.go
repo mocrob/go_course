@@ -41,7 +41,7 @@ func main() {
 
 	sugar = *logger.Sugar()
 	parseFlags()
-	memoryStorage := storage.NewMemoryStorage()
+	var memoryStorage *storage.MemoryStorage
 	if flagRestore {
 		memoryStorage = storage.NewMemoryStorageFromFile(filepath.Join(rootDir, flagFileStoragePath))
 	} else {
