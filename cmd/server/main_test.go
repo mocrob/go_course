@@ -39,7 +39,7 @@ func TestMetricUpdateHandler(t *testing.T) {
 			want: want{
 				code:     http.StatusBadRequest,
 				request:  "/update/qwerty/qwerty/1451",
-				response: "Incorrect metric type\\n",
+				response: "Incorrect metric type\n",
 			},
 		},
 		{
@@ -57,7 +57,7 @@ func TestMetricUpdateHandler(t *testing.T) {
 			want: want{
 				code:     http.StatusBadRequest,
 				request:  "/update/gauge/test1/qwerty",
-				response: "Incorrect value\\n",
+				response: "Incorrect value\n",
 			},
 		},
 		{
