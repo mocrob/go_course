@@ -13,6 +13,13 @@ import (
 	"testing"
 )
 
+func float64Ptr(f float64) *float64 {
+	return &f
+}
+
+func int64Ptr(i int64) *int64 {
+	return &i
+}
 func TestMetricUpdateHandler(t *testing.T) {
 	type want struct {
 		code          int
@@ -57,9 +64,9 @@ func TestMetricUpdateHandler(t *testing.T) {
 			name: "add exist gauge metric",
 			storage: storage.NewMemoryStoragePlusMetrics(map[string]entity.Metric{
 				"test1": {
-					Type:  entity.Gauge,
-					Name:  "test1",
-					Value: 2.5,
+					MType: entity.Gauge,
+					ID:    "test1",
+					Value: float64Ptr(2.5),
 				},
 			}),
 			want: want{
@@ -68,9 +75,9 @@ func TestMetricUpdateHandler(t *testing.T) {
 				response: "",
 				expectStorage: storage.NewMemoryStoragePlusMetrics(map[string]entity.Metric{
 					"test1": {
-						Type:  entity.Gauge,
-						Name:  "test1",
-						Value: 2.0,
+						MType: entity.Gauge,
+						ID:    "test1",
+						Value: float64Ptr(2.0),
 					},
 				}),
 			},
@@ -79,9 +86,9 @@ func TestMetricUpdateHandler(t *testing.T) {
 			name: "add not exist gauge metric",
 			storage: storage.NewMemoryStoragePlusMetrics(map[string]entity.Metric{
 				"test1": {
-					Type:  entity.Gauge,
-					Name:  "test1",
-					Value: 2.5,
+					MType: entity.Gauge,
+					ID:    "test1",
+					Value: float64Ptr(2.5),
 				},
 			}),
 			want: want{
@@ -90,14 +97,14 @@ func TestMetricUpdateHandler(t *testing.T) {
 				response: "",
 				expectStorage: storage.NewMemoryStoragePlusMetrics(map[string]entity.Metric{
 					"test1": {
-						Type:  entity.Gauge,
-						Name:  "test1",
-						Value: 2.5,
+						MType: entity.Gauge,
+						ID:    "test1",
+						Value: float64Ptr(2.5),
 					},
 					"test2": {
-						Type:  entity.Gauge,
-						Name:  "test2",
-						Value: 2.0,
+						MType: entity.Gauge,
+						ID:    "test2",
+						Value: float64Ptr(2.0),
 					},
 				}),
 			},
@@ -106,9 +113,9 @@ func TestMetricUpdateHandler(t *testing.T) {
 			name: "add not exist counter metric",
 			storage: storage.NewMemoryStoragePlusMetrics(map[string]entity.Metric{
 				"test1": {
-					Type:  entity.Counter,
-					Name:  "test1",
-					Value: int64(2),
+					MType: entity.Counter,
+					ID:    "test1",
+					Delta: int64Ptr(2),
 				},
 			}),
 			want: want{
@@ -117,14 +124,14 @@ func TestMetricUpdateHandler(t *testing.T) {
 				response: "",
 				expectStorage: storage.NewMemoryStoragePlusMetrics(map[string]entity.Metric{
 					"test1": {
-						Type:  entity.Counter,
-						Name:  "test1",
-						Value: int64(2),
+						MType: entity.Counter,
+						ID:    "test1",
+						Delta: int64Ptr(2),
 					},
 					"test2": {
-						Type:  entity.Counter,
-						Name:  "test2",
-						Value: int64(3),
+						MType: entity.Counter,
+						ID:    "test2",
+						Delta: int64Ptr(3),
 					},
 				}),
 			},
@@ -133,9 +140,9 @@ func TestMetricUpdateHandler(t *testing.T) {
 			name: "add exist counter metric",
 			storage: storage.NewMemoryStoragePlusMetrics(map[string]entity.Metric{
 				"test1": {
-					Type:  entity.Counter,
-					Name:  "test1",
-					Value: int64(2),
+					MType: entity.Counter,
+					ID:    "test1",
+					Delta: int64Ptr(2),
 				},
 			}),
 			want: want{
@@ -144,9 +151,9 @@ func TestMetricUpdateHandler(t *testing.T) {
 				response: "",
 				expectStorage: storage.NewMemoryStoragePlusMetrics(map[string]entity.Metric{
 					"test1": {
-						Type:  entity.Counter,
-						Name:  "test1",
-						Value: int64(5),
+						MType: entity.Counter,
+						ID:    "test1",
+						Delta: int64Ptr(5),
 					},
 				}),
 			},

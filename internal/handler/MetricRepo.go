@@ -1,4 +1,4 @@
-package repository
+package handler
 
 import (
 	"github.com/mocrob/go_course.git/internal/entity"
